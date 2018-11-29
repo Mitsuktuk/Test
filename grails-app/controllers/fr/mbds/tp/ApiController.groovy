@@ -144,18 +144,20 @@ class ApiController {
                 if (userInstance) {
                     // On récupère la liste des Messages qui ont été émis par l'utilisateur que nous souhaitons effacer
                     def Messages = Message.findAllByAuthor(userInstance)
-                    // On itère sur la liste et récupère la liste des UserMessages qui référencent le user que nous souhaitons effacer pour les effacer
-                    Messages.each {
-                        def userMessages = UserMessage.findAllByMessage(it)
-                        userMessages.each {
-                            UserMessage userMessage ->
-                                userMessage.delete(flush: true)
-                        }
-                    }
-                    // On itère sur la liste des Messages et efface chaque référence
+                    // On récupère le place holder pour les users supprimés
+                    def userDeleted = User.findByUsername("userDeleted")
+                    // On itère sur la liste et on remplace l'auteur par notre place holder
                     Messages.each {
                         Message message ->
-                            message.delete(flush: true)
+                            message.author = userDeleted
+                            message.save(flush: true)
+                    }
+                    // On récupère la liste des UserMessage qui référencent l'user que nous souhaitons effacer
+                    def userMessages = UserMessage.findAllByUser(userInstance)
+                    // On itère sur la liste et supprime chaque userMessage
+                    userMessages.each {
+                        UserMessage userMessage ->
+                            userMessage.delete(flush: true)
                     }
                     // On peut enfin effacer l'instance de User
                     userInstance.delete(flush: true)
