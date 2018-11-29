@@ -171,6 +171,32 @@ class ApiController {
         }
     }
 
+    def users() {
+        switch (request.getMethod()) {
+            case "GET":
+                reponseFormatList(User.list(), request)
+                break
+            case "POST":
+                def userInstance
+                // Créer le user
+                userInstance = new User(username: params.username, password: params.password, firstName: params.firstName, lastName: params.lastName, mail: params.mail)
+                if (userInstance.save(flush: true)) {
+//                        // Ajouter destinataire
+//                        if (params.receiver.id)
+//                        {
+//                            def receiverInstance = User.get(params.receiver.id)
+//                            if (receiverInstance)
+//                                new UserMessage(user: receiverInstance, message: messageInstance).save(flush: true)
+//                        }
+                    render(status: 201, text: "user créé")
+                }
+                if (response.status != 201)
+                    response.status = 400
+
+                break
+        }
+    }
+
     def reponseFormat(Object instance, HttpServletRequest request) {
         switch (request.getHeader("Accept")) {
             case "text/xml":
