@@ -98,6 +98,79 @@ class ApiController {
         }
     }
 
+    def user() {
+        switch (request.getMethod()) {
+            case "GET":
+                if (params.id) { // on doit retourner une instance de user
+                    def userInstance = User.get(params.id)
+                    if (userInstance)
+                        reponseFormat(userInstance, request)
+                    else
+                        response.status = 404
+                } else // on doit retourner la liste de tous les messages
+                    forward action: "users"
+                break
+            case "POST":
+                forward action: "users"
+                break
+            case "PUT":
+                def userInstance = params.id ? User.get(params.id) : null
+                if (userInstance) {
+                    if (params.username)
+                        userInstance.username = params.username
+
+                    if (params.password)
+                        userInstance.password = params.password
+
+                    if (params.firstName)
+                        userInstance.firstName = params.firstName
+
+                    if (params.lastName)
+                        userInstance.lastName = params.lastName
+
+                    if (params.mail)
+                        userInstance.mail = params.mail
+
+                    if(userInstance.save(flush: true))
+                        render(text: "Mise à jour effectuée pour le user ${userInstance.id}")
+                    else
+                        render(status: 400, text: "Echec de la mise à jour du user ${userInstance.id}")
+                } else {
+                    render(status: 404, text: "Le user désigné est introuvable")
+                }
+                break
+            case "DELETE":
+                def userInstance = params.id ? User.get(params.id) : null
+                if (userInstance) {
+                    // On récupère la liste des Messages qui ont été émis par l'utilisateur que nous souhaitons effacer
+                    def Messages = Message.findAllByAuthor(userInstance)
+                    // On itère sur la liste et récupère la liste des UserMessages qui référencent le user que nous souhaitons effacer
+                    def userMessages = []
+                    Messages.each {
+                        userMessages << UserMessage.findAllByMessage(it)
+                    }
+                    // On itère sur la liste des UserMessages et efface chaque référence
+                    userMessages.each {
+                        UserMessage userMessage ->
+                            userMessage.delete(flush: true)
+                    }
+                    // On itère sur la liste des Messages et efface chaque référence
+                    Messages.each {
+                        Message message ->
+                            message.delete(flush: true)
+                    }
+                    // On peut enfin effacer l'instance de User
+                    userInstance.delete(flush: true)
+                    render(status: 200, text: "user effacé")
+                } else
+                    render(status: 404, text: "user introuvable")
+                break
+            default:
+                response.status = 405
+                break
+        }
+    }
+
     def reponseFormat(Object instance, HttpServletRequest request) {
         switch (request.getHeader("Accept")) {
             case "text/xml":
