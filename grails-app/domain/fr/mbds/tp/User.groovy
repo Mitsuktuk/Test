@@ -37,8 +37,8 @@ class User implements Serializable {
         mail nullable: false, blank: false, unique: true
         dob nullable: true
         tel nullable: true
-        lastName nullable: true, blank: false
-        firstName nullable: true, blank: false
+        lastName nullable: false, blank: false
+        firstName nullable: false, blank: false
     }
 
     static mapping = {
