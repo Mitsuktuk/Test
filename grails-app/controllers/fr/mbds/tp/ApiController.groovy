@@ -73,14 +73,14 @@ class ApiController {
                 break
             case "POST":
                 // Vérifier auteur
-                def authorInstance = params.author.id ? User.get(params.author.id) : null
+                def authorInstance = params.get("author.id") ? User.get(params.author.id) : null
                 def messageInstance
                 if (authorInstance) {
                     // Créer le message
                     messageInstance = new Message(author: authorInstance, messageContent: params.messageContent)
                     if (messageInstance.save(flush: true)) {
                         // Ajouter destinataire
-                        if (params.receiver)
+                        if (params.get("receiver.id"))
                         {
                             def receiverInstance = User.get(params.receiver.id)
                             if (receiverInstance)

@@ -20,7 +20,7 @@ class MessageController {
         def messageInstance = Message.get(id)
         def userMessageList = UserMessage.findAllByMessage(messageInstance)
         def userList = userMessageList.collect{ it.user }
-        respond messageInstance, model: [userList: userList]
+        respond messageInstance, model: [userList: userList, message: messageInstance]
     }
 
     def create() {
