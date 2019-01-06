@@ -17,7 +17,7 @@ class ApiController {
                     if (messageInstance)
                         reponseFormat(messageInstance, request)
                     else
-                        response.status = 404
+                        render(status: 404, text: "Le message avec l'id ${params.id} est introuvable")
                 } else // on doit retourner la liste de tous les messages
                     forward action: "messages"
                 break
@@ -79,20 +79,20 @@ class ApiController {
                     // Créer le message
                     messageInstance = new Message(author: authorInstance, messageContent: params.messageContent)
                     if (messageInstance.save(flush: true)) {
-//                        // Ajouter destinataire
-//                        if (params.receiver.id)
-//                        {
-//                            def receiverInstance = User.get(params.receiver.id)
-//                            if (receiverInstance)
-//                                new UserMessage(user: receiverInstance, message: messageInstance).save(flush: true)
-//                        }
+                        // Ajouter destinataire
+                        if (params.receiver)
+                        {
+                            def receiverInstance = User.get(params.receiver.id)
+                            if (receiverInstance)
+                                new UserMessage(user: receiverInstance, message: messageInstance).save(flush: true)
+                        }
 
-                        render(status: 201)
+                        render(status: 201, text: "Message créé")
                     }
                 }
 
                 if (response.status != 201)
-                    response.status = 400
+                    render(status: 400, text: "Message non créé")
 
                 break
         }
@@ -106,7 +106,7 @@ class ApiController {
                     if (userInstance)
                         reponseFormat(userInstance, request)
                     else
-                        response.status = 404
+                        render(status: 404, text: "L'utilisateur avec l'id ${params.id} est introuvable")
                 } else // on doit retourner la liste de tous les messages
                     forward action: "users"
                 break
@@ -183,8 +183,7 @@ class ApiController {
                 if (userInstance.save(flush: true))
                     render(status: 201, text: "user créé")
                 if (response.status != 201)
-                    response.status = 400
-
+                    render(status: 400, text: "user non créé")
                 break
         }
     }
