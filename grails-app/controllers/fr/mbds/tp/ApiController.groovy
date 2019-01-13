@@ -73,7 +73,7 @@ class ApiController {
                 break
             case "POST":
                 // Vérifier auteur
-                def authorInstance = params.get("author.id") ? User.get(params.author.id) : null
+                def authorInstance = params.get("author.id") ? User.get(params.get("author.id")) : null
                 def messageInstance
                 if (authorInstance) {
                     // Créer le message
@@ -184,6 +184,44 @@ class ApiController {
                     render(status: 201, text: "user créé")
                 if (response.status != 201)
                     render(status: 400, text: "user non créé")
+                break
+            default:
+                response.status = 405
+                break
+        }
+    }
+
+    def messageToUser() {
+        switch (request.getMethod()) {
+            case "POST":
+                if (params.get("user.id")) {
+                    def userInstance = User.get(params.get("user.id"))
+                    if (userInstance) {
+                        def messageInstance;
+                        if (params.get("message.id")) {
+                            messageInstance = Message.get(params.get("message.id"))
+                        } else {
+                            def authorInstance = params.get("author.id") ? User.get(params.get("author.id")) : null
+                            if (authorInstance)
+                                messageInstance = new Message(author: authorInstance, messageContent: params.messageContent).save(flush: true)
+                        }
+                        if(messageInstance) {
+                            def userMessageInstance =  new UserMessage(message: messageInstance, user: userInstance)
+                            if(userMessageInstance.save(flush: true))
+                                render(status: 201, text: "Attribution du message ${messageInstance.id} à l'user ${userInstance.id} réussie.")
+                        } else {
+                            render(status: 400, text: "Message non récupéré - ")
+                        }
+                    } else {
+                        render(status: 404, text: "user introuvable - ")
+                    }
+                }
+
+                if (response.status != 201)
+                    render(status: 400, text: "Message non attribué")
+
+            default:
+                response.status = 405
                 break
         }
     }
