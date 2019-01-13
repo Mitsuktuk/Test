@@ -228,7 +228,40 @@ class ApiController {
 
     def messageToGroup() {
         switch (request.getMethod()) {
-            case "GET":
+            case "POST":
+                if (params.get("group.id")) {
+                    def roleInstance = Role.get(params.get("group.id"))
+                    def userRoleList = UserRole.findAllByRole(roleInstance)
+                    def userList = userRoleList.collect{ it.user }
+                    if (roleInstance) {
+                        def messageInstance;
+                        if (params.get("message.id")) {
+                            messageInstance = Message.get(params.get("message.id"))
+                        } else {
+                            def authorInstance = params.get("author.id") ? User.get(params.get("author.id")) : null
+                            if (authorInstance)
+                                messageInstance = new Message(author: authorInstance, messageContent: params.messageContent).save(flush: true)
+                        }
+                        if(messageInstance) {
+                            for (user in userList) {
+                                def userMessageInstance =  new UserMessage(message: messageInstance, user: user)
+                                if(userMessageInstance.save(flush: true))
+                                    render(status: 201, text: "Attribution du message ${messageInstance.id} à l'user ${user.id} réussie.")
+                            }
+                        } else {
+                            render(status: 400, text: "Message non récupéré - ")
+                        }
+                    } else {
+                        render(status: 404, text: "Groupe introuvable - ")
+                    }
+                }
+
+                if (response.status != 201)
+                    render(status: 400, text: "Message non attribué")
+
+            default:
+                response.status = 405
+                break
         }
     }
 
