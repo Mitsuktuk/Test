@@ -34,7 +34,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="${g.createLink(controller: "user")}">Users</a></li>
                     <li><a href="${g.createLink(controller: "message")}">Messages</a></li>
-                    <li><a href="${g.createLink(controller: "group")}">Groups</a></li>
+                    <li><a href="${g.createLink(controller: "role")}">Groups</a></li>
                 </ul>
             </div>
         </div>

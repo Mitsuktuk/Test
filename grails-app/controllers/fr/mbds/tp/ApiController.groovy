@@ -226,6 +226,12 @@ class ApiController {
         }
     }
 
+    def messageToGroup() {
+        switch (request.getMethod()) {
+            case "GET":
+        }
+    }
+
     def reponseFormat(Object instance, HttpServletRequest request) {
         switch (request.getHeader("Accept")) {
             case "text/xml":
