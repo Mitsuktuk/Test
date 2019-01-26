@@ -1,5 +1,6 @@
 package fr.mbds.tp
 
+import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
 import grails.validation.ValidationException
 import static org.springframework.http.HttpStatus.*
@@ -8,12 +9,19 @@ import static org.springframework.http.HttpStatus.*
 class MessageController {
 
     MessageService messageService
+    SpringSecurityService springSecurityService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond messageService.list(params), model:[messageCount: messageService.count()]
+    }
+
+    def received() {
+        def userMessageList = UserMessage.findAllByUser(springSecurityService.currentUser)
+        def messageList = userMessageList.collect{ it.message }
+        respond messageList, model: [messageList: messageList]
     }
 
     def show(Long id) {

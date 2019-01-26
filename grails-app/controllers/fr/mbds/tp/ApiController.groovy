@@ -246,7 +246,7 @@ class ApiController {
                             for (user in userList) {
                                 def userMessageInstance =  new UserMessage(message: messageInstance, user: user)
                                 if(userMessageInstance.save(flush: true))
-                                    render(status: 201, text: "Attribution du message ${messageInstance.id} à l'user ${user.id} réussie.")
+                                    render(status: 201, text: "Attribution du message ${messageInstance.id} à l'user ${user.id} réussie. ")
                             }
                         } else {
                             render(status: 400, text: "Message non récupéré - ")

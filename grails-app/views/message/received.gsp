@@ -13,7 +13,7 @@
             </ul>
         </div>
         <div id="list-message" class="content scaffold-list" role="main">
-            <h1>Tous les messages</h1>
+            <h1>Messages reçus</h1>
 
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
@@ -32,12 +32,6 @@
                     </tr>
                 </g:each>
             </table>
-
-            <nav>
-                <ul class="pagination">
-                    <li><g:paginate total="${messageCount ?: 0}" /></li>
-                </ul>
-            </nav>
 
         </div>
     </body>

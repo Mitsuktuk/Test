@@ -13,3 +13,25 @@
 *= require mobile
 *= require_self
 */
+
+.navbar-brand img{
+    width: 60%;
+}
+
+.jumbotron {
+    background-color: #fff2ed;
+}
+
+.jumbotron h1{
+    color: #f0632c;
+}
+
+.btn-primary {
+    background-color: #f0632c;
+    border-color: red;
+}
+
+.btn-primary:focus, .btn-primary:hover{
+    background-color: #B45A14;
+    border-color: darkred;
+}

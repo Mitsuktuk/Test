@@ -15,32 +15,61 @@
 </head>
 
 <body>
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
-        <div class="container">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
 
-                <a class="navbar-brand" href="/#">
-		            <asset:image src="grails.svg" alt="Grails Logo"/>
+                <sec:ifLoggedIn>
+                    <a class="navbar-brand" href="${g.createLink(controller: "message", action: "received")}">
+                </sec:ifLoggedIn>
+                <sec:ifNotLoggedIn>
+                    <a class="navbar-brand" href="${g.createLink(controller: "message", action: "received")}">
+                </sec:ifNotLoggedIn>
+                    <asset:image src="logo.png" alt="Messagerie Logo"/>
                 </a>
             </div>
 
-            <div class="navbar-collapse collapse" aria-expanded="false" style="height: 0.8px;">
+            <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="${g.createLink(controller: "user")}">Users</a></li>
-                    <li><a href="${g.createLink(controller: "message")}">Messages</a></li>
-                    <li><a href="${g.createLink(controller: "role")}">Groups</a></li>
+                    <sec:ifNotLoggedIn>
+                        <li><a href="${g.createLink(controller: "login", action: "auth")}">Connexion</a></li>
+                    </sec:ifNotLoggedIn>
+                    <sec:ifLoggedIn>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Messages <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="${g.createLink(controller: "message", action: "received")}">Reçus</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="${g.createLink(controller: "message", action: "create")}">Nouveau</a></li>
+                            </ul>
+                        </li>
+                        <sec:ifAllGranted roles="ROLE_ADMIN">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="${g.createLink(controller: "message")}">Messages</a></li>
+                                    <li><a href="${g.createLink(controller: "user")}">Users</a></li>
+                                    <li><a href="${g.createLink(controller: "role")}">Groups</a></li>
+                                </ul>
+                            </li>
+                        </sec:ifAllGranted>
+                        <li><a href="${g.createLink(controller: "logout")}">Déconnexion</a></li>
+                    </sec:ifLoggedIn>
+
                 </ul>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <g:layoutBody/>
+    <div class="container">
+        <g:layoutBody/>
+    </div>
 
     <div class="footer" role="contentinfo"></div>
 
