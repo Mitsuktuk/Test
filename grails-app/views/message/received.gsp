@@ -7,11 +7,7 @@
     </head>
 
     <body>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
+
         <div id="list-message" class="content scaffold-list" role="main">
             <h1>Messages reçus</h1>
 
@@ -25,7 +21,7 @@
                     <th>Contenu</th>
                     <th>Auteur</th>
                 </tr>
-                <g:each in="${messageList}" var="message">
+                <g:each in="${messageList.reverse()}" var="message">
                     <tr>
                         <td><g:link controller="message" action="show" id="${message.id}">${message.messageContent}</g:link></td>
                         <td>${message.author.username}</td>

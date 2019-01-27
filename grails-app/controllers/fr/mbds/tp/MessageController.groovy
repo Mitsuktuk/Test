@@ -24,6 +24,11 @@ class MessageController {
         respond messageList, model: [messageList: messageList]
     }
 
+    def sent() {
+        def messageList = Message.findAllByAuthor(springSecurityService.currentUser)
+        respond messageList, model: [messageList: messageList]
+    }
+
     def show(Long id) {
         def messageInstance = Message.get(id)
         def userMessageList = UserMessage.findAllByMessage(messageInstance)
@@ -42,17 +47,19 @@ class MessageController {
             notFound()
             return
         }
+        message.author = User.get(params.author)
+        message.messageContent = params.messageContent
+        message.save(flush: true)
 
-        try {
-            messageService.save(message)
-        } catch (ValidationException e) {
-            respond message.errors, view:'create'
-            return
+        if (params.get("receiver")) {
+            def receiverInstance = User.get(params.receiver)
+            if (receiverInstance)
+                new UserMessage(user: receiverInstance, message: message).save(flush: true)
         }
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'message.label', default: 'Message'), message.id])
+                flash.message = "Message envoyé"
                 redirect message
             }
             '*' { respond message, [status: CREATED] }
@@ -66,13 +73,6 @@ class MessageController {
     def update(Message message) {
         if (message == null) {
             notFound()
-            return
-        }
-
-        try {
-            messageService.save(message)
-        } catch (ValidationException e) {
-            respond message.errors, view:'edit'
             return
         }
 
@@ -102,8 +102,19 @@ class MessageController {
             notFound()
             return
         }
+        def messageInstance = Message.get(id)
 
-        messageService.delete(id)
+        // On récupère la liste des UserMessage qui référencent le message que nous souhaitons effacer
+        def userMessages = UserMessage.findAllByMessage(messageInstance)
+
+        // On itère sur la liste et efface chaque référence
+        userMessages.each {
+            UserMessage userMessage ->
+                userMessage.delete(flush: true)
+        }
+
+        // On peut enfin effacer l'instance de Message
+        messageInstance.delete(flush: true)
 
         request.withFormat {
             form multipartForm {

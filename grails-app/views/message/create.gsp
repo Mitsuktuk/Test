@@ -6,16 +6,8 @@
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     </head>
     <body>
-        <a href="#create-message" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
-
         <div id="create-message" class="content scaffold-create" role="main">
-            <h1><g:message code="default.create.label" args="[entityName]" /></h1>
+            <h1>Envoyer un message</h1>
 
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
@@ -31,41 +23,39 @@
 
             <g:form resource="${this.message}" method="POST">
                 <fieldset class="form">
-                    <div class='fieldcontain required'>
+                    <div class='form-group fieldcontain required'>
                         <label for='messageContent'>Message Content
                             <span class='required-indicator'>*</span>
                         </label>
-                        <input type="text" name="messageContent" value="" required="" id="messageContent" />
+                        <textarea class="form-control" type="text" name="messageContent" value="" required="" id="messageContent"></textarea>
                     </div>
 
-                    <div class='fieldcontain required'>
-                        <label for='author'>
-                            Author
+                    <div class='form-group fieldcontain required'>
+                        <label for="receiver">
+                            Destinataire
                             <span class='required-indicator'>*</span>
                         </label>
-                        <select name="author.id" id="author">
+                        <select class="form-control" name="receiver" id="receiver">
                             <g:each in="${userList}" var="user">
                                 <option value="${user.id}" >${user.firstName + " " + user.lastName}</option>
                             </g:each>
                         </select>
                     </div>
 
-                    <div class='fieldcontain required'>
-                        <label for='destinataires'>
-                            Destinataires
-                            <span class='required-indicator'>*</span>
-                        </label>
-                        <input type="text" name="messageContent" value="" required="" id="destinataires" />
+                    <div class='form-group fieldcontain'>
+                        <label for="role">Group</label>
+                        <select class="form-control" name="role" id="role">
+                            <g:each in="${roleList}" var="role">
+                                <option value="${role.id}" >${role.authority}</option>
+                            </g:each>
+                        </select>
                     </div>
 
-                    <div class='fieldcontain'>
-                        <label for='groupes'>Groupes</label>
-                        <input type="text" name="messageContent" id="groupes" />
-                    </div>
+                    <input type="hidden" id="author" name="author" value="${sec.loggedInUserInfo(field:'id')}">
                 </fieldset>
-                <fieldset class="buttons">
+                <button class="button" type="submit">
                     <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
-                </fieldset>
+                </button>
             </g:form>
         </div>
     </body>

@@ -45,6 +45,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Messages <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="${g.createLink(controller: "message", action: "received")}">Reçus</a></li>
+                                <li><a href="${g.createLink(controller: "message", action: "sent")}">Envoyés</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="${g.createLink(controller: "message", action: "create")}">Nouveau</a></li>
                             </ul>
@@ -53,7 +54,6 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="${g.createLink(controller: "message")}">Messages</a></li>
                                     <li><a href="${g.createLink(controller: "user")}">Users</a></li>
                                     <li><a href="${g.createLink(controller: "role")}">Groups</a></li>
                                 </ul>
