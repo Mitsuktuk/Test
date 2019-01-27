@@ -159,6 +159,13 @@ class ApiController {
                         UserMessage userMessage ->
                             userMessage.delete(flush: true)
                     }
+                    // On récupère la liste des UserRole qui référencent l'user que nous souhaitons effacer
+                    def userRoles = UserRole.findAllByUser(userInstance)
+                    // On itère sur la liste et supprime chaque userRole
+                    userRoles.each {
+                        UserRole userRole ->
+                            userRole.delete(flush: true)
+                    }
                     // On peut enfin effacer l'instance de User
                     userInstance.delete(flush: true)
                     render(status: 200, text: "user effacé")

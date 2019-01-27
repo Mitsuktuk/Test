@@ -47,7 +47,7 @@
                         <label for='tel'>
                             Téléphone
                         </label>
-                        <input class="form-control" type="text" name="tel" value="" required="" id="tel" />
+                        <input class="form-control" type="text" name="tel" value="" id="tel" />
                     </div>
                 </fieldset>
 

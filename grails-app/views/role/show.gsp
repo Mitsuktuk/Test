@@ -8,10 +8,10 @@
     <body>
         <a class="btn btn-default" href="${g.createLink(controller: "role", action: "index")}" role="button">Retour aux groupes</a>
         <div id="show-role" class="content scaffold-show" role="main">
-            <h1><g:message code="default.show.label" args="[entityName]" /></h1>
+            <h1>Détails du groupe</h1>
 
             <g:if test="${flash.message}">
-            <div class="well">${flash.message}</div>
+                <div class="well">${flash.message}</div>
             </g:if>
 
             <div class="panel panel-default">

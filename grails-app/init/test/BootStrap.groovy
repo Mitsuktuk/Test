@@ -15,9 +15,12 @@ class BootStrap {
 
         def userDeleted = new User(username: "userDeleted", password: "secretDeleted", firstName: "userDeleted", lastName:"userDeleted", mail:"user@deleted").save(flush:true, failOnError: true)
 
+        def groupAll = new Role(authority: "groupe_all").save(flush: true, failOnError: true)
+
         (1..50).each {
             def userInstance = new User(username: "username-$it", password: "password", firstName: "first-$it", lastName: "last-$it", mail: "mail-$it").save(flush: true, failOnError:true)
             new Message(messageContent: "lala", author: userInstance).save(flush: true, failOnError: true)
+            UserRole.create(userInstance, groupAll, true)
         }
 
         Message.list().each {
@@ -28,7 +31,6 @@ class BootStrap {
                 }
         }
 
-        UserRole.create(userDeleted, roleAdmin, true)
     }
     def destroy = {
     }

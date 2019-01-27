@@ -24,7 +24,7 @@
             <g:form resource="${this.message}" method="POST">
                 <fieldset class="form">
                     <div class='form-group fieldcontain required'>
-                        <label for='messageContent'>Message Content
+                        <label for='messageContent'>Contenu du message
                             <span class='required-indicator'>*</span>
                         </label>
                         <textarea class="form-control" type="text" name="messageContent" value="" required="" id="messageContent"></textarea>
@@ -32,8 +32,7 @@
 
                     <div class='form-group fieldcontain required'>
                         <label for="receiver">
-                            Destinataire
-                            <span class='required-indicator'>*</span>
+                            Destinataires
                         </label>
                         <select multiple class="form-control" name="receiver" id="receiver">
                             <option value="" selected="selected"></option>
@@ -44,7 +43,7 @@
                     </div>
 
                     <div class='form-group fieldcontain'>
-                        <label for="role">Group</label>
+                        <label for="role">Groupes</label>
                         <select multiple class="form-control" name="role" id="role">
                             <option value="" selected="selected"></option>
                             <g:each in="${roleList}" var="role">

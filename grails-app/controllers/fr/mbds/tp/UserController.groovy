@@ -78,7 +78,37 @@ class UserController {
             return
         }
 
-        userService.delete(id)
+        def userInstance = User.get(id)
+        if (userInstance) {
+            // On récupère la liste des Messages qui ont été émis par l'utilisateur que nous souhaitons effacer
+            def Messages = Message.findAllByAuthor(userInstance)
+            // On récupère le place holder pour les users supprimés
+            def userDeleted = User.findByUsername("userDeleted")
+            // On itère sur la liste et on remplace l'auteur par notre place holder
+            Messages.each {
+                Message message ->
+                    message.author = userDeleted
+                    message.save(flush: true)
+            }
+            // On récupère la liste des UserMessage qui référencent l'user que nous souhaitons effacer
+            def userMessages = UserMessage.findAllByUser(userInstance)
+            // On itère sur la liste et supprime chaque userMessage
+            userMessages.each {
+                UserMessage userMessage ->
+                    userMessage.delete(flush: true)
+            }
+
+            // On récupère la liste des UserRole qui référencent l'user que nous souhaitons effacer
+            def userRoles = UserRole.findAllByUser(userInstance)
+            // On itère sur la liste et supprime chaque userRole
+            userRoles.each {
+                UserRole userRole ->
+                    userRole.delete(flush: true)
+            }
+
+            // On peut enfin effacer l'instance de User
+            userInstance.delete(flush: true)
+        }
 
         request.withFormat {
             form multipartForm {

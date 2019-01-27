@@ -21,7 +21,10 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/**/favicon.ico',    access: ['permitAll']],
 	[pattern: '/dbconsole/**', 	    access: ['ROLE_ADMIN']],
     [pattern: '/message/received',  access: ['permitAll']],
-    [pattern: '/message/create',  access: ['permitAll']],
+	[pattern: '/message/sent',      access: ['permitAll']],
+    [pattern: '/message/create',    access: ['permitAll']],
+    [pattern: '/message/show/**',   access: ['permitAll']],
+    [pattern: '/message/save',      access: ['permitAll']],
     [pattern: '/**',                access: ['ROLE_ADMIN']],
 	[pattern: '/api/**',            access: ['permitAll']]
 ]

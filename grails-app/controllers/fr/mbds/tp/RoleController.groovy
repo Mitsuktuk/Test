@@ -33,17 +33,19 @@ class RoleController {
             notFound()
             return
         }
+        role.authority = params.authority
+        role.save(flush: true)
 
-        try {
-            roleService.save(role)
-        } catch (ValidationException e) {
-            respond role.errors, view:'create'
-            return
+        if (params.get("members")) {
+            def userList = User.getAll(params.list("members"))
+            userList.each {
+                new UserRole(user: it, role: role).save(flush: true)
+            }
         }
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'role.label', default: 'Role'), role.id])
+                flash.message = "Groupe créé"
                 redirect role
             }
             '*' { respond role, [status: CREATED] }
@@ -51,7 +53,8 @@ class RoleController {
     }
 
     def edit(Long id) {
-        respond roleService.get(id)
+        def userList = User.findAll()
+        respond roleService.get(id), model: [userList: userList]
     }
 
     def update(Role role) {
@@ -59,12 +62,14 @@ class RoleController {
             notFound()
             return
         }
+        role.authority = params.authority
+        role.save(flush: true)
 
-        try {
-            roleService.save(role)
-        } catch (ValidationException e) {
-            respond role.errors, view:'edit'
-            return
+        if (params.get("members")) {
+            def userList = User.getAll(params.list("members"))
+            userList.each {
+                new UserRole(user: it, role: role).save(flush: true)
+            }
         }
 
         request.withFormat {
@@ -82,7 +87,18 @@ class RoleController {
             return
         }
 
-        roleService.delete(id)
+        def roleInstance = Role.get(id)
+        if (roleInstance) {
+            // On récupère la liste des UserRole qui référencent le role que nous souhaitons effacer
+            def userRoles = UserRole.findAllByRole(roleInstance)
+            // On itère sur la liste et supprime chaque userRole
+            userRoles.each {
+                UserRole userRole ->
+                    userRole.delete(flush: true)
+            }
+            // On peut enfin effacer l'instance de Role
+            roleInstance.delete(flush: true)
+        }
 
         request.withFormat {
             form multipartForm {

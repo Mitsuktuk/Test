@@ -27,9 +27,7 @@
                         </label>
                         <input class="form-control" type="text" name="authority" value="" required="" id="authority" />
                     </div>
-                </fieldset>
 
-                <fieldset class="form">
                     <div class='form-group fieldcontain required'>
                         <label for='members'>Membres
                             <span class='required-indicator'>*</span>
