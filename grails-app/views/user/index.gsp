@@ -7,29 +7,25 @@
     </head>
 
     <body>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
+        <a class="btn btn-success" href="${g.createLink(controller: "user", action: "create")}" role="button">Ajouter un utilisateur</a>
 
         <div id="list-user" class="content scaffold-list" role="main">
             <h1>Tous les utilisateurs</h1>
 
             <g:if test="${flash.message}">
-                <div class="message" role="status">${flash.message}</div>
+                <div class="well">${flash.message}</div>
             </g:if>
 
             %{--<f:table collection="${userList}" />--}%
             <table class="table">
                 <tr>
-                    <th>Username</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
                     <th>Mail</th>
                     <th>Tel</th>
-                    <th>Birth Date</th>
-                    <th>Creation date</th>
+                    <th>Anniversaire</th>
+                    <th>Date de création</th>
                 </tr>
                 <g:each in="${userList}" var="user">
                     <tr>

@@ -52,9 +52,20 @@ class MessageController {
         message.save(flush: true)
 
         if (params.get("receiver")) {
-            def receiverInstance = User.get(params.receiver)
-            if (receiverInstance)
-                new UserMessage(user: receiverInstance, message: message).save(flush: true)
+            def receiverList = User.getAll(params.list("receiver"))
+            receiverList.each {
+                new UserMessage(user: it, message: message).save(flush: true)
+            }
+        }
+
+        if (params.get("role")) {
+            def roleList = Role.getAll(params.list("role"))
+            roleList.each {
+                def userRoleList = UserRole.findAllByRole(it)
+                userRoleList.each {
+                    new UserMessage(user: it.user, message: message).save(flush: true)
+                }
+            }
         }
 
         request.withFormat {

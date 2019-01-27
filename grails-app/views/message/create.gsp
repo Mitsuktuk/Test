@@ -35,7 +35,8 @@
                             Destinataire
                             <span class='required-indicator'>*</span>
                         </label>
-                        <select class="form-control" name="receiver" id="receiver">
+                        <select multiple class="form-control" name="receiver" id="receiver">
+                            <option value="" selected="selected"></option>
                             <g:each in="${userList}" var="user">
                                 <option value="${user.id}" >${user.firstName + " " + user.lastName}</option>
                             </g:each>
@@ -44,7 +45,8 @@
 
                     <div class='form-group fieldcontain'>
                         <label for="role">Group</label>
-                        <select class="form-control" name="role" id="role">
+                        <select multiple class="form-control" name="role" id="role">
+                            <option value="" selected="selected"></option>
                             <g:each in="${roleList}" var="role">
                                 <option value="${role.id}" >${role.authority}</option>
                             </g:each>
@@ -53,9 +55,7 @@
 
                     <input type="hidden" id="author" name="author" value="${sec.loggedInUserInfo(field:'id')}">
                 </fieldset>
-                <button class="button" type="submit">
-                    <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
-                </button>
+                <g:submitButton name="create" class="save btn btn-success" value="${message(code: 'default.button.create.label', default: 'Create')}" />
             </g:form>
         </div>
     </body>

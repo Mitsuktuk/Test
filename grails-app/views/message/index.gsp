@@ -16,7 +16,7 @@
             <h1>Tous les messages</h1>
 
             <g:if test="${flash.message}">
-                <div class="message" role="status">${flash.message}</div>
+                <div class="well">${flash.message}</div>
             </g:if>
 
             %{--<f:table collection="${messageList}" />--}%

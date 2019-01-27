@@ -6,31 +6,44 @@
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     </head>
     <body>
-        <a href="#create-role" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
         <div id="create-role" class="content scaffold-create" role="main">
-            <h1><g:message code="default.create.label" args="[entityName]" /></h1>
+            <h1>Créer un groupe</h1>
+
             <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
+                <div class="well">${flash.message}</div>
             </g:if>
             <g:hasErrors bean="${this.role}">
-            <ul class="errors" role="alert">
-                <g:eachError bean="${this.role}" var="error">
-                <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-                </g:eachError>
-            </ul>
+                <ul class="errors" role="alert">
+                    <g:eachError bean="${this.role}" var="error">
+                    <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
+                    </g:eachError>
+                </ul>
             </g:hasErrors>
             <g:form resource="${this.role}" method="POST">
                 <fieldset class="form">
-                    <f:all bean="role"/>
+                    <div class='form-group fieldcontain required'>
+                        <label for='authority'>Intitulé
+                            <span class='required-indicator'>*</span>
+                        </label>
+                        <input class="form-control" type="text" name="authority" value="" required="" id="authority" />
+                    </div>
                 </fieldset>
+
+                <fieldset class="form">
+                    <div class='form-group fieldcontain required'>
+                        <label for='members'>Membres
+                            <span class='required-indicator'>*</span>
+                        </label>
+                        <select multiple class="form-control" name="members" id="members">
+                            <g:each in="${userList}" var="user">
+                                <option value="${user.id}" >${user.firstName + " " + user.lastName}</option>
+                            </g:each>
+                        </select>
+                    </div>
+                </fieldset>
+
                 <fieldset class="buttons">
-                    <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
+                    <g:submitButton name="create" class="save btn btn-success" value="${message(code: 'default.button.create.label', default: 'Create')}" />
                 </fieldset>
             </g:form>
         </div>

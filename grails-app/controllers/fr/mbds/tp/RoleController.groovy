@@ -24,7 +24,8 @@ class RoleController {
     }
 
     def create() {
-        respond new Role(params)
+        def userList = User.findAll()
+        respond new Role(params), model: [userList: userList]
     }
 
     def save(Role role) {

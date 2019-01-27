@@ -6,6 +6,8 @@
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
+        <a class="btn btn-success" href="${g.createLink(controller: "role", action: "create")}" role="button">Ajouter un groupe</a>
+
         <h1>Tous les groupes</h1>
         <g:if test="${flash.message}">
             <div class="well">${flash.message}</div>
