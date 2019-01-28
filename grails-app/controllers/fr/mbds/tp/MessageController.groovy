@@ -63,7 +63,9 @@ class MessageController {
             roleList.each {
                 def userRoleList = UserRole.findAllByRole(it)
                 userRoleList.each {
-                    new UserMessage(user: it.user, message: message).save(flush: true)
+                    def userMessageInstance = new UserMessage(user: it.user, message: message)
+                    if (!UserMessage.exists(userMessageInstance))
+                            userMessageInstance.save(flush: true)
                 }
             }
         }
